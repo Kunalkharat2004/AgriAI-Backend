@@ -41,7 +41,6 @@
     "@types/mongoose": "^5.11.96",
     "@types/morgan": "^1.9.10",
     "@types/socket.io": "^3.0.1",
-    "@types/node": "^24.3.0",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
