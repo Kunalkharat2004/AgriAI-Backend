@@ -15,11 +15,11 @@ const connectDB = async (): Promise<boolean> => {
       } as mongoose.ConnectOptions
     );
 
-    console.log(`MongoDB Connected: ${conn.connection.host}`.cyan.underline);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
     return true;
   } catch (error) {
     const err = error as Error;
-    console.error(`Error connecting to MongoDB: ${err.message}`.red.bold);
+    console.error(`Error connecting to MongoDB: ${err.message}`);
     process.exit(1);
   }
 };

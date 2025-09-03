@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import globalErrorHandler from "./middlewares/globalErrorHandler";
 import cors from "cors";
 import morgan from "morgan";
@@ -34,7 +34,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 
 // Root endpoint
-app.get("/", (req, res) => {
+app.get("/", (req:Request, res:Response) => {
   res.json({
     message: "AgriAI API is running",
     environment: config.nodeEnv,

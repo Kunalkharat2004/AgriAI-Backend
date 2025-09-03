@@ -1,4 +1,4 @@
-import {  checkSchema } from 'express-validator';
+import {  checkSchema } from "express-validator";
 
 const validateUserCredentials = checkSchema({
   email: {
