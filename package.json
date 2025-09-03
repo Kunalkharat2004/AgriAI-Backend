@@ -1,10 +1,10 @@
 {
   "name": "agri-market-backend",
   "version": "1.0.0",
-  "description": "Backend for AgriMarket",
+  "description": "Backend for Agri",
   "main": "dist/server.js",
   "scripts": {
-    "start": "ts-node dist/server.js",
+    "start": "node dist/server.js",
     "dev": "nodemon --exec ts-node server.ts",
     "build": "tsc"
   },
@@ -22,6 +22,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-validator": "^7.2.1",
+    "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.6.3",
     "morgan": "^1.10.0",
