@@ -6,7 +6,7 @@ const router = Router()
 
 router.post("/", (req:Request, res:Response)=>{
     const _req = req as AuthRequest
-    const userID = _req.userID;
+    const userID = _req.user?.sub || _req.user?._id;
     const date = new Date().toISOString().split("T")[0];
     const{queryDetails} = req.body;
 

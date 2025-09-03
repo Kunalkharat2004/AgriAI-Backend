@@ -4,25 +4,25 @@ import Feedback from "../models/feedback";
 
 const router = Router();
 
-router.post("/", (req:Request, res:Response) => {
-    const _req = req as AuthRequest
-    const userID = _req.userID;
-    const date = new Date().toISOString().split("T")[0];
-    const{feedbackDetails} = req.body;
+router.post("/", (req: Request, res: Response) => {
+  const _req = req as AuthRequest;
+  const userID = _req.user?.sub || _req.user?._id;
+  const date = new Date().toISOString().split("T")[0];
+  const { feedbackDetails } = req.body;
 
-    const feedback = new Feedback({
-        user:userID,
-        feedbackDetails:{
-            ...feedbackDetails,
-            date
-        }
-    })
+  const feedback = new Feedback({
+    user: userID,
+    feedbackDetails: {
+      ...feedbackDetails,
+      date,
+    },
+  });
 
-    feedback.save();
+  feedback.save();
 
-    res.status(200).json({
-        message:"Feedback sended successfully"
-    })
-})
+  res.status(200).json({
+    message: "Feedback sended successfully",
+  });
+});
 
 export default router;

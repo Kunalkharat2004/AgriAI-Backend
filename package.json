@@ -2,9 +2,9 @@
   "name": "agri-market-backend",
   "version": "1.0.0",
   "description": "Backend for Agri",
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "dev": "nodemon --exec ts-node server.ts",
     "build": "tsc"
   },
@@ -42,6 +42,5 @@
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
-   
   }
 }

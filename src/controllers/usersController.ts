@@ -29,10 +29,11 @@ export const userController = {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Store user in database
-        newUser = await User.create({
+        const createdUser = await User.create({
           email,
           password: hashedPassword,
         });
+        newUser = createdUser.toObject() as IUser;
       } catch (err) {
         return next(createHttpError(500, `Error while getting user ${err}`));
       }
