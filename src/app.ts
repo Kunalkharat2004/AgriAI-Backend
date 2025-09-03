@@ -28,12 +28,6 @@ if (config.nodeEnv === "development") {
   app.use(morgan("dev"));
 }
 
-// Log all incoming requests for debugging
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
-  next();
-});
-
 // API Routes
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
