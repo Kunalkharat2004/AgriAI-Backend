@@ -2,12 +2,11 @@
   "name": "agri-market-backend",
   "version": "1.0.0",
   "description": "Backend for AgriMarket",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node dist/server.js",
     "dev": "nodemon --exec ts-node server.ts",
-    "build": "tsc",
-    "vercel-build": "npm run build"
+    "build": "tsc"
   },
   "keywords": [
     "agriculture",
