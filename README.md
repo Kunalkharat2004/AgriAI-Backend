@@ -59,7 +59,7 @@ npm start
 3. Build Command: `npm run build`
 4. Start Command: `npm start`
 
-**Note**: The `.npmrc` file ensures that devDependencies (including TypeScript and type definitions) are installed during the build process.
+**Note**: `@types/node` is included in the main dependencies to ensure TypeScript compilation works during the build process.
 
 ## API Endpoints
 
