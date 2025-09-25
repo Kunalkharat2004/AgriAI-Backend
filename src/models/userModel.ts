@@ -6,6 +6,13 @@ export interface IUser extends mongoose.Document {
   email: string;
   password: string;
   role: string;
+  expertProfile?: {
+    specialization: string;
+    experienceYears: number;
+    languages: string[];
+    availability?: string;
+    location?: string;
+  };
   createdAt: Date;
   updatedAt: Date;
   matchPassword(enteredPassword: string): Promise<boolean>;
@@ -31,8 +38,18 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["farmer", "admin"],
+      enum: ["farmer", "expert", "admin"],
       default: "farmer",
+    },
+    photoUrl: {
+      type: String,
+    },
+    expertProfile: {
+      specialization: { type: String },
+      experienceYears: { type: Number },
+      languages: { type: [String], default: [] },
+      availability: { type: String },
+      location: { type: String },
     },
   },
   {

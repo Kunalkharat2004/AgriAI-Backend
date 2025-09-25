@@ -6,6 +6,7 @@ import { SignOptions, Secret } from "jsonwebtoken";
 import { CustomError } from "../utils/error";
 import User, { IUser } from "../models/userModel";
 import mongoose from "mongoose";
+import { uploadImage } from "../services/cloudinary";
 
 // Generate JWT token
 const generateToken = (id: string, role: string) => {
@@ -22,7 +23,37 @@ export const register = async (
   next: NextFunction
 ) => {
   try {
-    const { name, email, password, role = "farmer" } = req.body;
+    const {
+      name,
+      email,
+      password,
+      role = "farmer",
+      expertProfile,
+      photoUrl,
+    } = req.body as {
+      name: string;
+      email: string;
+      password: string;
+      role?: "farmer" | "expert" | "admin";
+      expertProfile?: {
+        specialization?: string;
+        experienceYears?: number;
+        languages?: string[];
+        availability?: string;
+        location?: string;
+      };
+      photoUrl?: string;
+    };
+
+    // If a file is provided, upload to Cloudinary
+    let uploadedPhotoUrl = photoUrl;
+    if (req.file && req.file.buffer) {
+      try {
+        uploadedPhotoUrl = await uploadImage(req.file.buffer);
+      } catch (e) {
+        console.error("Cloudinary upload failed", e);
+      }
+    }
 
     // Validate input
     if (!name || !email || !password) {
@@ -41,6 +72,8 @@ export const register = async (
       email,
       password, // Password will be hashed automatically in pre-save middleware
       role,
+      expertProfile: role === "expert" ? expertProfile : undefined,
+      photoUrl: uploadedPhotoUrl,
     });
 
     // Create user object without password
@@ -49,6 +82,7 @@ export const register = async (
       name: newUser.get("name"),
       email: newUser.email,
       role: newUser.role,
+      photoUrl: newUser.get("photoUrl"),
     };
 
     // Generate token
@@ -206,6 +240,36 @@ export const updateProfile = async (
       message: "Profile updated successfully",
       user: userWithoutPassword,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    List all experts (public)
+// @route   GET /api/users/experts
+// @access  Public
+export const listExperts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const experts = await User.find({ role: "expert" }).select(
+      "name email role photoUrl expertProfile"
+    );
+    const formatted = experts.map((u) => ({
+      id: u._id,
+      name: u.get("name"),
+      email: u.email,
+      role: u.role,
+      photoUrl: u.get("photoUrl") || "",
+      specialization: u.get("expertProfile")?.specialization || "",
+      experienceYears: u.get("expertProfile")?.experienceYears || 0,
+      languages: u.get("expertProfile")?.languages || [],
+      availability: u.get("expertProfile")?.availability || "",
+      location: u.get("expertProfile")?.location || "",
+    }));
+    res.status(200).json({ success: true, experts: formatted });
   } catch (error) {
     next(error);
   }
