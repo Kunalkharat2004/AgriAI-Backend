@@ -6,6 +6,7 @@ import { config } from "./config/config";
 import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
 import orderRoutes from "./routes/orderRoutes";
+import appointmentRoutes from "./routes/appointmentRoutes";
 
 // Create Express app
 const app = express();
@@ -32,9 +33,10 @@ if (config.nodeEnv === "development") {
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/appointments", appointmentRoutes);
 
 // Root endpoint
-app.get("/", (req:Request, res:Response) => {
+app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "AgriAI API is running",
     environment: config.nodeEnv,
