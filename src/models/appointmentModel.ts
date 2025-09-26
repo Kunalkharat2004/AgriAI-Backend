@@ -10,6 +10,13 @@ export interface IAppointment extends mongoose.Document {
   languages?: string[];
   preferredTime?: string; // optional, free text or ISO date for schedule requests
   status: "pending" | "scheduled" | "completed" | "cancelled";
+  callStatus:
+    | "not_requested"
+    | "farmer_requested"
+    | "expert_accepted"
+    | "call_in_progress"
+    | "call_ended";
+  roomName?: string; // Jitsi room name for the call
   createdAt: Date;
   updatedAt: Date;
 }
@@ -33,6 +40,18 @@ const appointmentSchema = new mongoose.Schema(
       enum: ["pending", "scheduled", "completed", "cancelled"],
       default: "pending",
     },
+    callStatus: {
+      type: String,
+      enum: [
+        "not_requested",
+        "farmer_requested",
+        "expert_accepted",
+        "call_in_progress",
+        "call_ended",
+      ],
+      default: "not_requested",
+    },
+    roomName: { type: String, optional: true },
   },
   { timestamps: true }
 );

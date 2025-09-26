@@ -23,6 +23,9 @@ interface ServerToClientEvents {
   order_updated: (data: any) => void;
   user_order_updated: (data: any) => void;
   new_order: (data: any) => void;
+  appointment_call_requested: (data: any) => void;
+  appointment_call_accepted: (data: any) => void;
+  appointment_call_ended: (data: any) => void;
 }
 
 // Define valid event names type
@@ -32,6 +35,9 @@ interface ClientToServerEvents {
   subscribe: (deviceId: string) => void;
   unsubscribe: (deviceId: string) => void;
   updateSensor: (data: any) => void;
+  join_admin_room: () => void;
+  join_user_orders: (userId: string) => void;
+  join_expert_room: (expertId: string) => void;
 }
 
 let io: Server<ClientToServerEvents, ServerToClientEvents>;
@@ -88,6 +94,28 @@ export const setupSocketIO = (server: HttpServer) => {
           });
         }
       }
+    });
+
+    // Handle admin room join
+    socket.on("join_admin_room", () => {
+      console.log(`Client ${socket.id} joined admin room`);
+      socket.join("admin_room");
+    });
+
+    // Handle user orders room join
+    socket.on("join_user_orders", (userId) => {
+      console.log(
+        `Client ${socket.id} joined user orders room for user ${userId}`
+      );
+      socket.join(`user_orders_${userId}`);
+    });
+
+    // Handle expert room join
+    socket.on("join_expert_room", (expertId) => {
+      console.log(
+        `Client ${socket.id} joined expert room for expert ${expertId}`
+      );
+      socket.join(`expert_${expertId}`);
     });
 
     // Handle disconnection
@@ -180,4 +208,45 @@ export const emitUserOrderUpdate = (orderId: string, data: any) => {
     return;
   }
   socketUtils.emitUserOrderUpdate(orderId, data);
+};
+
+// Emit appointment call request to expert
+export const emitAppointmentCallRequest = (
+  expertId: string,
+  appointmentData: any
+) => {
+  if (io) {
+    io.to(`expert_${expertId}`).emit(
+      "appointment_call_requested",
+      appointmentData
+    );
+  }
+};
+
+// Emit appointment call accepted to farmer
+export const emitAppointmentCallAccepted = (
+  farmerId: string,
+  appointmentData: any
+) => {
+  if (io) {
+    io.to(`user_orders_${farmerId}`).emit(
+      "appointment_call_accepted",
+      appointmentData
+    );
+  }
+};
+
+// Emit appointment call ended to both parties
+export const emitAppointmentCallEnded = (
+  expertId: string,
+  farmerId: string,
+  appointmentData: any
+) => {
+  if (io) {
+    io.to(`expert_${expertId}`).emit("appointment_call_ended", appointmentData);
+    io.to(`user_orders_${farmerId}`).emit(
+      "appointment_call_ended",
+      appointmentData
+    );
+  }
 };
